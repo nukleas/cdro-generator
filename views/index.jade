@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    div(style="text-align: center;")
+        h1 cdro generator
+        p#cdro!=cdro
+        button(onclick="getNewCDRO()") Get another.
+    script.
+        function callAjax(url, callback) {
+            var xmlhttp;
+            // compatible with IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    callback(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+        }
+        function getNewCDRO(){
+            callAjax('cdrogen.json', function(result) {
+                var json = result ? JSON.parse(result) : '{}';
+                if (json && json.result) {
+                    document.getElementById('cdro').innerHTML = json.result;
+                }
+            })
+        }
